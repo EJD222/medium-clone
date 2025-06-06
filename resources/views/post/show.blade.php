@@ -3,15 +3,17 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-8">
                 <h1 class="text-3xl font-bold mb-4">{{$post->title}}</h1>
+
                 <!-- Title and Author -->
                 <div class="flex gap-4">
-                    <x-user-avatar :user="$post->user"/>
+                    <x-user-avatar :user="$post->user" />
                     <div>
-                        <div class="flex gap-2">
+                        <x-follow-container :user="$post->user" class="flex gap-2">
                             <a href="{{ route('profile.show', $post->user) }}">{{ $post->user->name }}</a>
                             &middot;
-                            <a href="#" class="text-emerald-500">Follow</a>
-                        </div>
+                            <button @click="follow()" x-text="following ? 'Unfollow' : 'Follow'" :class="following ? 'text-red-600' : 'text-emerald-600'">
+                            </button>
+                        </x-follow-container>
                         <div class="flex gap-2 text-sm text-gray-500">
                             <span> {{ $post->readTime() }} min read</span>
                             &middot;
@@ -19,8 +21,10 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Clap Section -->
                 <x-clap-button />
+
                 <!-- Content Section -->
                 <div class="mt-4">
                     <img src="{{ $post->imageURL() }}" alt="{{ $post->title }}" />
@@ -28,6 +32,7 @@
                         {{ $post->content }}
                     </div>
                 </div>
+
                 <!-- Clap Section -->
                 <x-clap-button />
             </div>
