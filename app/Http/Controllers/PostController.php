@@ -17,7 +17,16 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('created_at','DESC')->simplePaginate(5);
+        $user = auth("")->user();
+        $query = Post::orderBy('created_at','DESC');
+
+        if ($user) {
+            $ids = $user->following->pluck('id');
+            //dd($ids);
+            $query->whereIn('user_id', $ids);
+        } 
+
+        $posts = $query->simplePaginate(5);
 
         return view('post.index', [
             'posts' => $posts
@@ -90,7 +99,17 @@ class PostController extends Controller
     }
 
     public function category(Category $category) {
-        $posts = $category->posts()->latest()->simplePaginate(5);
+        $user = auth("")->user();
+
+        $query = $category->posts()->latest();
+
+        if ($user) {
+            $ids = $user->following->pluck('id');
+            //dd($ids);
+            $query->whereIn('user_id', $ids);
+        } 
+
+        $posts = $query->simplePaginate(5);
 
         return view('post.index',[
             'posts' => $posts,
