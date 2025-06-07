@@ -11,11 +11,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/@{user:username}', [PublicProfileController::class,'show'])->name('profile.show');
+Route::get('/', [PostController::class, 'index'])
+    ->name('dashboard');
+
+Route::get('/@{username}/{post:slug}', [PostController::class,'show'])
+    ->name('post.show');
+
+Route::get('/@{user:username}', [PublicProfileController::class,'show'])
+    ->name('profile.show');
 
 Route::middleware(['auth','verified'])->group(function () {
-    Route::get('/', [PostController::class, 'index'])
-        ->name('dashboard');
 
     Route::get('/category/{category:name}', [PostController::class, 'category'])
         ->name('post.byCategory');
@@ -26,9 +31,6 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::post('/post/create', [PostController::class,'store'])
         ->name('post.store');
     
-    Route::get('/@{username}/{post:slug}', [PostController::class,'show'])
-        ->name('post.show');
-
     Route::post('/follow/{user}', [FollowerController::class, 'followUnfollow'])
         ->name('follow');
 
