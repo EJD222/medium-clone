@@ -10,9 +10,11 @@
                     <div>
                         <x-follow-container :user="$post->user" class="flex gap-2">
                             <a href="{{ route('profile.show', $post->user) }}">{{ $post->user->name }}</a>
-                            &middot;
-                            <button @click="follow()" x-text="following ? 'Unfollow' : 'Follow'" :class="following ? 'text-red-600' : 'text-emerald-600'">
-                            </button>
+                            @auth
+                                &middot;
+                                <button @click="follow()" x-text="following ? 'Unfollow' : 'Follow'" :class="following ? 'text-red-600' : 'text-emerald-600'">
+                                </button>
+                            @endauth
                         </x-follow-container>
                         <div class="flex gap-2 text-sm text-gray-500">
                             <span> {{ $post->readTime() }} min read</span>
@@ -23,7 +25,9 @@
                 </div>
 
                 <!-- Clap Section -->
-                <x-clap-button :post="$post" />
+                @auth
+                    <x-clap-button :post="$post" />
+                @endauth
 
                 <!-- Content Section -->
                 <div class="mt-4">
@@ -34,7 +38,9 @@
                 </div>
 
                 <!-- Clap Section -->
-                <x-clap-button :post="$post" />
+                @auth
+                    <x-clap-button :post="$post" />
+                @endauth
             </div>
         </div>
 </x-app-layout>
