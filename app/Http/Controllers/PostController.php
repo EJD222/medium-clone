@@ -88,4 +88,12 @@ class PostController extends Controller
     {
         //
     }
+
+    public function category(Category $category) {
+        $posts = $category->posts()->latest()->simplePaginate(5);
+
+        return view('post.index',[
+            'posts' => $posts,
+        ]);
+    }
 }
