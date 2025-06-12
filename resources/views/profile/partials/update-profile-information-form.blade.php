@@ -17,9 +17,9 @@
         @csrf
         @method('patch')
 
-        @if ($user->image)
+        @if ($user->imageUrl())
             <div>
-                <img src="{{ $user->imageURL() }}" alt="{{ $user->name }}" class="rounded-full h-20 w-20">
+                <img src="{{ $user->imageUrl() }}" alt="{{ $user->name }}" class="rounded-full h-20 w-20">
             </div>
         @endif
 
