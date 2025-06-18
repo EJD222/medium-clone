@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -17,8 +18,12 @@ class PostController extends Controller
      */
     public function index()
     {
+        // DB::listen(function($query){
+        //     dump($query->sql);
+        // });
+
         $user = auth("")->user();
-        $query = Post::orderBy('created_at','DESC');
+        $query = Post::with(['user', 'media'])->withCount('claps')->orderBy('created_at','DESC');
 
         if ($user) {
             $ids = $user->following->pluck('id');
@@ -102,7 +107,10 @@ class PostController extends Controller
     public function category(Category $category) {
         $user = auth("")->user();
 
-        $query = $category->posts()->latest();
+        $query = $category->posts()
+            ->with(['user', 'media'])
+            ->withCount('claps')
+            ->latest();
 
         if ($user) {
             $ids = $user->following->pluck('id');
