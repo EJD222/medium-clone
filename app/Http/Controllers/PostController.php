@@ -23,7 +23,10 @@ class PostController extends Controller
         // });
 
         $user = auth("")->user();
-        $query = Post::with(['user', 'media'])->withCount('claps')->orderBy('created_at','DESC');
+        $query = Post::with(['user', 'media'])
+            ->where('published_at', '<=', now())
+            ->withCount('claps')
+            ->orderBy('created_at','DESC');
 
         if ($user) {
             $ids = $user->following->pluck('id');
@@ -130,9 +133,10 @@ class PostController extends Controller
     }
 
     public function category(Category $category) {
-        $user = auth("")->user();
+        $user = auth()->user();
 
         $query = $category->posts()
+            ->where('published_at', '<=', now())
             ->with(['user', 'media'])
             ->withCount('claps')
             ->latest();

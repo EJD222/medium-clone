@@ -36,7 +36,7 @@ class PublicProfileController extends Controller
      */
     public function show(User $user)
     {
-        $posts = $user->posts()->orderBy("created_at","desc")->paginate(10);
+        $posts = $user->posts()->where('published_at', '<=', now())->orderBy("created_at","desc")->paginate(10);
         return view('profile.show', [
             'user'=> $user,
             'posts'=> $posts
