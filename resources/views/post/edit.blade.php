@@ -1,10 +1,17 @@
 <x-app-layout>
     <div class="py-8">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <h1 class="mb-4 text-3xl">Create New Post</h1>
+            <h1 class="mb-4 text-3xl">Update Post: <strong class="font-bold">{{ $post->title }}</strong></h1>
             <div class="p-8 overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                <form action="{{ route('post.store') }}" enctype="multipart/form-data" method="post">
+                <form action="{{ route('post.edit', $post->id) }}" enctype="multipart/form-data" method="post">
                     @csrf
+                    @method('put')
+                    
+                    @if ($post->imageUrl())
+                        <div class="mb-8">
+                            <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}" class="w-full">
+                        </div>
+                    @endif
 
                     <!-- Category -->
                     <div class="mt-4">
@@ -13,7 +20,7 @@
                             class="border-gray-300 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
                             <option value="">Select a Category</option>
                             @foreach($categories as $category)
-                                <option value={{ $category->id }} @selected(old('category_id') == $category->id)> {{ $category->name }}
+                                <option value={{ $category->id }} @selected(old('category_id', $post->category_id ) == $category->id)> {{ $category->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -35,7 +42,7 @@
                     <div class="mt-4">
                         <x-input-label for="title" :value="__('Title')" />
                         <x-text-input id="title" class="block w-full mt-1" type="text" name="title"
-                            :value="old('title')" autofocus />
+                            :value="old('title', $post->title )" autofocus />
                         <x-input-error :messages="$errors->get('title')" class="mt-2" />
                     </div>
 
@@ -43,7 +50,7 @@
                     <div class="mt-4">
                         <x-input-label for="content" :value="__('Content')" />
                         <x-text-area id="content" class="block w-full mt-1" type="text" name="content">
-                            {{ old('content') }}
+                            {{ old('content', $post->content ) }}
                         </x-text-area>
                         <x-input-error :messages="$errors->get('content')" class="mt-2" />
                     </div>

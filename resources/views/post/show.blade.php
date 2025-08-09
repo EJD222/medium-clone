@@ -27,7 +27,7 @@
 
                 @if($post->user_id === Auth::id())
                     <div class="pt-4 mt-8 border-t border-gray-200">
-                        <x-primary-button>
+                        <x-primary-button href="{{ route('post.edit', $post->slug)}}">
                             Edit Post
                         </x-primary-button>
                         <form class="inline-block" action="{{ route('post.destroy', $post)}}" method="post">
