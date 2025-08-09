@@ -1,8 +1,8 @@
 <x-app-layout>
     <div class="py-8">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-8">
-                <h1 class="text-3xl font-bold mb-4">{{$post->title}}</h1>
+            <div class="p-8 overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
+                <h1 class="mb-4 text-3xl font-bold">{{$post->title}}</h1>
 
                 <!-- Title and Author -->
                 <div class="flex gap-4">
@@ -12,7 +12,8 @@
                             <a href="{{ route('profile.show', $post->user) }}">{{ $post->user->name }}</a>
                             @auth
                                 &middot;
-                                <button @click="follow()" x-text="following ? 'Unfollow' : 'Follow'" :class="following ? 'text-red-600' : 'text-emerald-600'">
+                                <button @click="follow()" x-text="following ? 'Unfollow' : 'Follow'"
+                                    :class="following ? 'text-red-600' : 'text-emerald-600'">
                                 </button>
                             @endauth
                         </x-follow-container>
@@ -23,6 +24,21 @@
                         </div>
                     </div>
                 </div>
+
+                @if($post->user_id === Auth::id())
+                    <div class="pt-4 mt-8 border-t border-gray-200">
+                        <x-primary-button>
+                            Edit Post
+                        </x-primary-button>
+                        <form class="inline-block" action="{{ route('post.destroy', $post)}}" method="post">
+                            @csrf
+                            @method('delete')
+                            <x-danger-button>
+                                Delete Post
+                            </x-danger-button>
+                        </form>
+                    </div>
+                @endif
 
                 <!-- Clap Section -->
                 @auth
